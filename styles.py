@@ -1,0 +1,5 @@
+TITLE_FONT = ("Segoe UI", 20, "bold")
+BUTTON_FONT = ("Segoe UI", 12, "bold")
+BODY_FONT = ("Segoe UI", 12)
+ENTRY_FONT = ("Segoe UI", 12)
+TREEVIEW_FONT = ("Segoe UI", 11)
