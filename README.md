@@ -11,32 +11,32 @@
 ## ✨ Features
 
 ### 📊 **Dashboard** — Your Financial Overview at a Glance
-- 🎯 Real-time statistics: monthly income, total expenses, and savings
-- 📈 Interactive donut chart showing your savings allocation breakdown
-- 📋 Recent expenses tracker (last 5 transactions)
-- 💵 Savings breakdown table with category-wise allocation percentages
+- Real-time statistics: monthly income, total expenses, and savings
+- Interactive donut chart showing your savings allocation breakdown
+- Recent expenses tracker (last 5 transactions)
+- Savings breakdown table with category-wise allocation percentages
 
 ### 💳 **Expenses** — Track Every Dollar
-- ➕ Add, edit, and delete expenses with ease
-- 🏷️ Categorize expenses (Food, Transportation, Entertainment, Utilities, etc.)
-- 🔍 Filter by category to find what you're looking for
-- 📅 Date-stamped transactions with descriptions
-- 💹 Category totals at a glance with quick-view pills
+- Add, edit, and delete expenses with ease
+- Categorize expenses (Food, Transportation, Entertainment, Utilities, etc.)
+- Filter by category to find what you're looking for
+- Date-stamped transactions with descriptions
+- Category totals at a glance with quick-view pills
 
 ### 💵 **Savings** — Allocate Intelligently
-- 🎨 Customizable savings allocation categories with color-coded swatches
-- 🔄 Live preview of your savings pie chart as you adjust percentages
-- ✅ Real-time validation (must sum to exactly 100%)
-- 💰 Automatic dollar amount calculations per category
-- 📊 Visual allocation breakdown
+- Customizable savings allocation categories with color-coded swatches
+- Live preview of your savings pie chart as you adjust percentages
+- Real-time validation (must sum to exactly 100%)
+- Automatic dollar amount calculations per category
+- Visual allocation breakdown
 
 ### 🎯 **Financial Goals** — Dream Big, Plan Smart
-- 🏆 Create multiple financial goals with target amounts
-- 📈 Progress bars showing how close you are to each goal
-- ➕ Add funds to goals as you save
-- 🎨 Auto-assigned color coding for visual organization
-- ✏️ Edit goal details anytime
-- 🗑️ Delete goals when complete or no longer relevant
+- Create multiple financial goals with target amounts
+- Progress bars showing how close you are to each goal
+- Add funds to goals as you save
+- Auto-assigned color coding for visual organization
+- Edit goal details anytime
+- Delete goals when complete or no longer relevant
 
 ---
 
@@ -186,13 +186,13 @@ PersonalBudgetTracker/
 
 ## 🚀 Future Enhancements
 
-- 📱 Mobile app version (React Native)
-- 📊 Advanced analytics & spending reports
-- 🔐 User authentication & cloud sync
-- 📧 Budget alerts & notifications
-- 📥 CSV import/export for expenses
-- 🌙 Dark mode theme
-- 💬 Budget recommendations based on spending patterns
+- Mobile app version (React Native)
+- Advanced analytics & spending reports
+- User authentication & cloud sync
+- Budget alerts & notifications
+- CSV import/export for expenses
+- Dark mode theme
+- Budget recommendations based on spending patterns
 
 ---
 
