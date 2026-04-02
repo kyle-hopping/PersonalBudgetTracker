@@ -1,68 +1,121 @@
-"""
-Module: app.py
-Contains the main BudgetApp Tkinter controller.
-"""
+# app.py
+# Root Tkinter window. Builds the sidebar and swaps page frames.
 
 import tkinter as tk
-from pages.home_page import HomePage
-from pages.savings_page import SavingsPage
-from pages.spendings_page import SpendingsPage
-from pages.goals_page import GoalsPage
-from utils import storage
+from models.budget_model import BudgetModel
+from pages.home_page     import HomePage
+from pages.expenses_page import ExpensesPage
+from pages.savings_page  import SavingsPage
+from pages.goals_page    import GoalsPage
+from styles import COLORS, FONTS
 
 class BudgetApp(tk.Tk):
-    """Main application controller for Personal Budget Tracker."""
     def __init__(self):
         super().__init__()
         self.title("Personal Budget Tracker")
+        self.configure(bg=COLORS["bg"])
+        self.resizable(True, True)
+        self.minsize(960, 640)
+        self._center(1240, 780)
 
-        # Window settings
-        window_width = 1200
-        window_height = 700
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        x = (screen_width // 2) - (window_width // 2)
-        y = (screen_height // 2) - (window_height // 2)
-        self.geometry(f"{window_width}x{window_height}+{x}+{y}")
-        self.resizable(False, False)
+        self.model = BudgetModel()
 
-        # Load data
-        self.savings_list, self.spendings_list, self.goals_list = storage.load_data()
+        self._build_sidebar()
+        self._build_content()
+        self._build_pages()
 
-        self.frames = {}
-        container = tk.Frame(self)
-        container.pack(fill="both", expand=True)
+        self.show_page("home")
+        self.protocol("WM_DELETE_WINDOW", self._on_close)
 
-        for Page in (HomePage, SavingsPage, SpendingsPage, GoalsPage):
-            page_name = Page.__name__
-            if Page == HomePage:
-                frame = Page(container, self, self.savings_list, self.spendings_list)
-            elif Page == SavingsPage:
-                frame = Page(container, self, self.savings_list)
-            elif Page == SpendingsPage:
-                frame = Page(container, self, self.spendings_list)
-            else:
-                frame = Page(container, self, self.goals_list)
+    # ----- Helpers -----
 
-            self.frames[page_name] = frame
-            frame.pack(fill="both", expand=True)
+    def _center(self, w: int, h: int):
+        sw, sh = self.winfo_screenwidth(), self.winfo_screenheight()
+        self.geometry(f"{w}x{h}+{(sw - w) // 2}+{(sh - h) // 2}")
 
-        # Show the initial page
-        self.show_frame("HomePage")
+    # ----- Layout -----
 
-        # Save data on close
-        self.protocol("WM_DELETE_WINDOW", self.on_close)
+    def _build_sidebar(self):
+        self._sidebar = tk.Frame(self, bg=COLORS["sidebar"], width=215)
+        self._sidebar.pack(side="left", fill="y")
+        self._sidebar.pack_propagate(False)
 
-    def show_frame(self, page_name):
-        """Raise the specified page to the front."""
-        for name, frame in self.frames.items():
-            frame.pack_forget()
-        frame = self.frames[page_name]
-        frame.pack(fill="both", expand=True)
-        if page_name == "HomePage":
-            frame.update_balance()
+        # App logo / title block
+        title_blk = tk.Frame(self._sidebar, bg=COLORS["primary_dark"], height=72)
+        title_blk.pack(fill="x")
+        title_blk.pack_propagate(False)
+        tk.Label(title_blk, text="💰  BudgetPro", font=FONTS["app_title"],
+                 bg=COLORS["primary_dark"], fg="white").pack(expand=True)
 
-    def on_close(self):
-        """Save data and close the application."""
-        storage.save_data(self.savings_list, self.spendings_list, self.goals_list)
+        tk.Frame(self._sidebar, bg=COLORS["primary_dark"], height=2).pack(fill="x")
+        tk.Frame(self._sidebar, bg=COLORS["sidebar"], height=18).pack()
+
+        # Section label
+        tk.Label(self._sidebar, text="NAVIGATION", font=("Helvetica", 8, "bold"),
+                 bg=COLORS["sidebar"], fg="#4a8a6a",
+                 anchor="w", padx=22).pack(fill="x", pady=(0, 6))
+
+        self._nav_btns: dict = {}
+        nav = [
+            ("home",     "🏠",  "Dashboard"),
+            ("expenses", "💳",  "Expenses"),
+            ("savings",  "💵",  "Savings"),
+            ("goals",    "🎯",  "Goals"),
+        ]
+        for key, icon, label in nav:
+            btn = tk.Button(
+                self._sidebar,
+                text=f"  {icon}  {label}",
+                font=FONTS["sidebar_item"],
+                bg=COLORS["sidebar"], fg="white",
+                bd=0, pady=13, padx=14, anchor="w",
+                cursor="hand2",
+                activebackground=COLORS["sidebar_hover"],
+                activeforeground="white",
+                command=lambda k=key: self.show_page(k),
+            )
+            btn.pack(fill="x")
+            self._nav_btns[key] = btn
+
+        # Bottom version badge
+        tk.Label(self._sidebar, text="v2.0", font=FONTS["small"],
+                 bg=COLORS["sidebar"], fg="#3a7a5a").pack(side="bottom", pady=12)
+
+    def _build_content(self):
+        self._content = tk.Frame(self, bg=COLORS["bg"])
+        self._content.pack(side="left", fill="both", expand=True)
+
+    def _build_pages(self):
+        self._pages: dict = {
+            "home":     HomePage(self._content, self),
+            "expenses": ExpensesPage(self._content, self),
+            "savings":  SavingsPage(self._content, self),
+            "goals":    GoalsPage(self._content, self),
+        }
+
+    # ----- Navigation -----
+
+    def show_page(self, name: str):
+        # Update nav button highlights
+        for key, btn in self._nav_btns.items():
+            active = key == name
+            btn.configure(
+                bg=COLORS["sidebar_hover"] if active else COLORS["sidebar"],
+                font=FONTS["nav_active"] if active else FONTS["sidebar_item"],
+            )
+
+        # Swap visible page
+        for page in self._pages.values():
+            page.pack_forget()
+
+        page = self._pages[name]
+        page.pack(fill="both", expand=True)
+
+        if hasattr(page, "refresh"):
+            page.refresh()
+
+    # ----- Close -----
+
+    def _on_close(self):
+        self.model.save()
         self.destroy()

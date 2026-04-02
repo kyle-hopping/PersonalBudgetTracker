@@ -1,6 +1,7 @@
-"""
-Entry point for the Personal Budget Tracker application.
-"""
+# Entry point for the application
+
+import matplotlib
+matplotlib.use("TkAgg")
 
 from app import BudgetApp
 
