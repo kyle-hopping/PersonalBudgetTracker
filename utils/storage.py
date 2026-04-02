@@ -17,7 +17,6 @@ def load_data() -> dict:
     except (json.JSONDecodeError, IOError):
         return _default_data()
 
-
 def save_data(data: dict) -> None:
     # Persist data dict to JSON file.
     try:
@@ -25,7 +24,6 @@ def save_data(data: dict) -> None:
             json.dump(data, f, indent=2)
     except IOError as exc:
         print(f"[BudgetTracker] Failed to save data: {exc}")
-
 
 def _default_data() -> dict:
     return {
