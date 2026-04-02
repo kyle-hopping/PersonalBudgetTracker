@@ -28,13 +28,11 @@ class BudgetApp(tk.Tk):
         self.protocol("WM_DELETE_WINDOW", self._on_close)
 
     # ----- Helpers -----
-
     def _center(self, w: int, h: int):
         sw, sh = self.winfo_screenwidth(), self.winfo_screenheight()
         self.geometry(f"{w}x{h}+{(sw - w) // 2}+{(sh - h) // 2}")
 
     # ----- Layout -----
-
     def _build_sidebar(self):
         self._sidebar = tk.Frame(self, bg=COLORS["sidebar"], width=215)
         self._sidebar.pack(side="left", fill="y")
@@ -94,7 +92,6 @@ class BudgetApp(tk.Tk):
         }
 
     # ----- Navigation -----
-
     def show_page(self, name: str):
         # Update nav button highlights
         for key, btn in self._nav_btns.items():
@@ -115,7 +112,6 @@ class BudgetApp(tk.Tk):
             page.refresh()
 
     # ----- Close -----
-
     def _on_close(self):
         self.model.save()
         self.destroy()
