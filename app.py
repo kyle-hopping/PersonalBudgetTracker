@@ -42,7 +42,7 @@ class BudgetApp(tk.Tk):
         title_blk = tk.Frame(self._sidebar, bg=COLORS["primary_dark"], height=72)
         title_blk.pack(fill="x")
         title_blk.pack_propagate(False)
-        tk.Label(title_blk, text="💰  BudgetPro", font=FONTS["app_title"],
+        tk.Label(title_blk, text="BudgetPro", font=FONTS["app_title"],
                  bg=COLORS["primary_dark"], fg="white").pack(expand=True)
 
         tk.Frame(self._sidebar, bg=COLORS["primary_dark"], height=2).pack(fill="x")
@@ -55,21 +55,21 @@ class BudgetApp(tk.Tk):
 
         self._nav_btns: dict = {}
         nav = [
-            ("home",     "🏠",  "Dashboard"),
-            ("expenses", "💳",  "Expenses"),
-            ("savings",  "💵",  "Savings"),
-            ("goals",    "🎯",  "Goals"),
+            ("home", "🏠", "Dashboard"),
+            ("expenses", "💳", "Expenses"),
+            ("savings", "💵", "Savings"),
+            ("goals", "🎯", "Goals"),
         ]
         for key, icon, label in nav:
             btn = tk.Button(
                 self._sidebar,
                 text=f"  {icon}  {label}",
                 font=FONTS["sidebar_item"],
-                bg=COLORS["sidebar"], fg="white",
+                bg=COLORS["sidebar"], fg="black",
                 bd=0, pady=13, padx=14, anchor="w",
                 cursor="hand2",
                 activebackground=COLORS["sidebar_hover"],
-                activeforeground="white",
+                activeforeground="black",
                 command=lambda k=key: self.show_page(k),
             )
             btn.pack(fill="x")
@@ -84,12 +84,16 @@ class BudgetApp(tk.Tk):
         self._content.pack(side="left", fill="both", expand=True)
 
     def _build_pages(self):
+        # Create page frames and stack them using `place` so we can
+        # lift the desired page to the front without re-packing.
         self._pages: dict = {
             "home":     HomePage(self._content, self),
             "expenses": ExpensesPage(self._content, self),
             "savings":  SavingsPage(self._content, self),
             "goals":    GoalsPage(self._content, self),
         }
+        for p in self._pages.values():
+            p.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     # ----- Navigation -----
     def show_page(self, name: str):
@@ -101,13 +105,11 @@ class BudgetApp(tk.Tk):
                 font=FONTS["nav_active"] if active else FONTS["sidebar_item"],
             )
 
-        # Swap visible page
-        for page in self._pages.values():
-            page.pack_forget()
-
+        # Bring the requested page to front (no re-packing).
         page = self._pages[name]
-        page.pack(fill="both", expand=True)
+        page.lift()
 
+        # Call refresh if the page implements it.
         if hasattr(page, "refresh"):
             page.refresh()
 
